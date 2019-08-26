@@ -33,14 +33,19 @@ public class App
         ICommand commandToExecute = getiCommand(command, filename);
         IResult resultOfCommand = null;
 
-        if(commandToExecute != null)
-            resultOfCommand = commandToExecute.execute();
-
         Connection dbConnection  = getDBConnection();
 
-        if(resultOfCommand != null){
+        if(commandToExecute != null) {
 
-            resultOfCommand.setConnection(dbConnection);
+            commandToExecute.setConnection(dbConnection);
+
+            resultOfCommand = commandToExecute.execute();
+
+        }
+
+
+
+        if(resultOfCommand != null){
 
             if(resultOfCommand.canPersist() && dbConnection!=null)
                 resultOfCommand.persist();

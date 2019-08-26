@@ -9,14 +9,17 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class FieldDefinition {
 
-    private  String STRING_TYPE = "STRING";
+    public static  String STRING_TYPE = "STRING";
 
-    protected String INT_TYPE = "INTEGER";
+    public static String INT_TYPE = "INTEGER";
 
-    protected String MIXED_TYPE = "MIXED";
+    public static String MIXED_TYPE = "MIXED";
 
-    @Getter
+    @Getter @Setter
     protected String fieldName;
+
+    @Getter @Setter
+    protected String fileName;
 
     @Getter @Setter
     public String dataType = null;
@@ -31,6 +34,19 @@ public class FieldDefinition {
 
     public int getCountNonNullValues() {
         return countNonNullValues.get();
+    }
+
+    public void setCountNullValues(int num) {
+        countNullValues.set(num);
+    }
+
+    public void setCountNonNullValues(int num) { countNonNullValues.set(num); }
+
+    public FieldDefinition(String fieldName) throws RuntimeException{
+        if(fieldName == null || fieldName.isEmpty()){
+            throw new RuntimeException("Invalid field name");
+        }
+        this.fieldName = fieldName;
     }
 
     public FieldDefinition(String fieldName, int countNullValues) throws RuntimeException{

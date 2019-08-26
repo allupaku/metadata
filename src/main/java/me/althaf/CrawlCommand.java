@@ -10,10 +10,13 @@ import me.althaf.parsers.CSVFileParser;
 import me.althaf.parsers.JSONFileParser;
 import me.althaf.parsers.AbstractFileParser;
 
+import java.sql.Connection;
 import java.util.List;
 import java.util.Objects;
 
 public class CrawlCommand implements ICommand{
+
+    public final static String FIELD_DEF_TABLE_NAME = "field_definitions";
 
     @Getter @Setter
     AbstractFileParser fileParser;
@@ -22,6 +25,9 @@ public class CrawlCommand implements ICommand{
     private String fileName;
 
     FieldSummaryObserver observer;
+
+    @Getter @Setter
+    Connection connection;
 
     @Getter
     CrawlCommandResult result;
@@ -53,6 +59,10 @@ public class CrawlCommand implements ICommand{
         List<FieldDefinition> resultList = this.observer.getResult();
 
         result = new CrawlCommandResult(this.getFileName(),resultList);
+
+        result.setTableName(FIELD_DEF_TABLE_NAME);
+
+        result.setConnection(this.connection);
 
         return result;
     }

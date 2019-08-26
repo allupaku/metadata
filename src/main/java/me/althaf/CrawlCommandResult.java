@@ -14,7 +14,8 @@ public class CrawlCommandResult implements IResult {
 
     List<FieldDefinition> listOfFields;
 
-    private final static String FIELD_DEF_TABLE_NAME = "field_definitions";
+    @Getter @Setter
+    String tableName;
 
     @Getter @Setter
     Connection connection;
@@ -46,7 +47,7 @@ public class CrawlCommandResult implements IResult {
     protected void deleteExistingRecords() throws SQLException {
 
         PreparedStatement prepStatement =
-                connection.prepareStatement("delete from "+ FIELD_DEF_TABLE_NAME+ " where filename=?");
+                connection.prepareStatement("delete from "+ tableName + " where filename=?");
 
         prepStatement.setString(1,this.identifier);
 
@@ -81,7 +82,7 @@ public class CrawlCommandResult implements IResult {
             PreparedStatement prepInsertStatement =
                     connection.prepareStatement(
                             "INSERT INTO " +
-                                    FIELD_DEF_TABLE_NAME +
+                                    tableName +
                                     " VALUES( ? , ?, ?, ?, ? ) ");
 
             prepInsertStatement.setString(1,this.identifier);
