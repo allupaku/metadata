@@ -108,6 +108,10 @@ public class CrawlCommandResult implements IResult {
     @Override
     public void display() {
 
+        this.listOfFields.forEach((fd) -> {
+            System.out.println(fd.toString());
+        });
+
     }
 
     public boolean canPersist() {

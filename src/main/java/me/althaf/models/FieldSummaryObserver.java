@@ -20,7 +20,7 @@ public class FieldSummaryObserver implements
     protected String identifier;
 
     public FieldSummaryObserver(String identifier){
-        if(Strings.isNullOrEmpty(identifier)){
+        if(identifier==null || identifier.isEmpty()){
             throw new RuntimeException("Invalid identifier passed in for field summary");
         }
         this.identifier = identifier;
