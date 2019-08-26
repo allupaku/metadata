@@ -25,7 +25,7 @@ public class App
         String command = args[0];
         String filename = args[1];
 
-        if(Strings.isNullOrEmpty(command) || Strings.isNullOrEmpty(filename) ){
+        if(command==null || filename==null || filename.isEmpty() || command.isEmpty() ){
             System.err.println("Please pass command to run and file name");
             return;
         }
