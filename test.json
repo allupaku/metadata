@@ -1,0 +1,48 @@
+[
+  {
+    "event": "impression",
+    "width": 30,
+    "height": null,
+    "client_uid": 1149718404179214300,
+    "perimeter_x": 0
+  },
+  {
+    "event": "impression",
+    "width": 10,
+    "height": null,
+    "client_uid": 1149718404179214300,
+    "location": "contract_lister_client",
+    "perimeter_x": 0
+  },
+  {
+    "event": "impression",
+    "width": 20,
+    "height": null,
+    "client_uid": 1149718404179214300,
+    "location": "contract_lister_client",
+    "perimeter_x": 0
+  },
+  {
+    "event": "impression",
+    "width": 40,
+    "height": null,
+    "client_uid": 1149718404179214300,
+    "location": "contract_lister_client",
+    "perimeter_x": 0
+  },
+  {
+    "event": "impression",
+    "width": 50,
+    "height": null,
+    "client_uid": 1149718404179214300,
+    "location": "contract_lister_client",
+    "perimeter_x": 0
+  },
+  {
+    "event": "impression",
+    "height": null,
+    "client_uid": 1149718404179214300,
+    "location": "contract_lister_client",
+    "perimeter_x": 0
+  }
+]
