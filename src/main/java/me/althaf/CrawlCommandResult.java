@@ -46,7 +46,7 @@ public class CrawlCommandResult implements IResult {
     protected void deleteExistingRecords() throws SQLException {
 
         PreparedStatement prepStatement =
-                connection.prepareStatement("delete from "+ FIELD_DEF_TABLE_NAME+ " where identifier=?");
+                connection.prepareStatement("delete from "+ FIELD_DEF_TABLE_NAME+ " where filename=?");
 
         prepStatement.setString(1,this.identifier);
 
@@ -66,7 +66,7 @@ public class CrawlCommandResult implements IResult {
 
             if (preparedStatement != null) {
 
-                preparedStatement.executeQuery();
+                preparedStatement.execute();
             }
 
         }catch(SQLException sqex){
