@@ -41,6 +41,7 @@ public abstract class AbstractFileParser<T> implements IFileParser, IRecordParse
         this.observers.add(new ResultCounter());
     }
 
+
     public void addObserver(IEntryObserver observer){
         this.observers.add(observer);
     }
@@ -49,9 +50,7 @@ public abstract class AbstractFileParser<T> implements IFileParser, IRecordParse
 
         Path filepath = Paths.get(filename);
         // Checking basic qualities required for a file to be read by our application
-        if(!filepath.isAbsolute()){
-            throw new RuntimeException("Please provide absolute path");
-        }
+
         if(!Files.exists(filepath)){
             throw new FileNotFoundException("File not found " + filepath.toAbsolutePath());
         }

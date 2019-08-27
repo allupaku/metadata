@@ -12,6 +12,7 @@ import java.util.List;
 
 public class CrawlCommandResult implements IResult {
 
+    @Getter @Setter
     List<FieldDefinition> listOfFields;
 
     @Getter @Setter
@@ -32,16 +33,16 @@ public class CrawlCommandResult implements IResult {
 
     @Override
     public void persist() {
+        if(canPersist() && connection!=null){
+            try {
+                this.deleteExistingRecords();
 
-        try {
-            this.deleteExistingRecords();
+                this.writeFieldDefinitionsToTable();
 
-            this.writeFieldDefinitionsToTable();
-
-        }catch(Exception ex){
-            ex.printStackTrace();
+            }catch(Exception ex){
+                ex.printStackTrace();
+            }
         }
-
     }
 
     protected void deleteExistingRecords() throws SQLException {
@@ -52,6 +53,8 @@ public class CrawlCommandResult implements IResult {
         prepStatement.setString(1,this.identifier);
 
         prepStatement.execute();
+
+        prepStatement.close();
     }
 
     protected void writeFieldDefinitionsToTable()  {
@@ -69,6 +72,8 @@ public class CrawlCommandResult implements IResult {
 
                 preparedStatement.execute();
             }
+
+            preparedStatement.close();
 
         }catch(SQLException sqex){
             sqex.printStackTrace();
@@ -124,6 +129,11 @@ public class CrawlCommandResult implements IResult {
         }catch(Exception ex){
             return false;
         }
+    }
+
+    @Override
+    public int getNumberOfFields() {
+        return this.listOfFields.size();
     }
 
 }

@@ -1,6 +1,9 @@
 package me.althaf;
 
 import com.google.common.base.Strings;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.*;
 
 /**
@@ -12,8 +15,62 @@ public class App
     private final static String CRAWL_COMMAND = "crawl";
     private final static String DESCRIBE_COMMAND = "describe";
 
-    private static Connection dbConnection;
+    private Connection dbConnection;
 
+    private String filename;
+
+    private String command;
+
+    ICommand commandToExecute = null;
+    IResult resultOfCommand = null;
+
+    public App(String command, String filename){
+        this.command = command;
+        this.filename = this.normalizePath(filename);
+
+    }
+
+    public String normalizePath(String filename){
+        Path filepath = Paths.get(filename);
+
+        String normalFilePath = filename;
+
+        if(!filepath.isAbsolute()){
+            filepath.toAbsolutePath();
+            normalFilePath = filepath.toFile().getAbsolutePath();
+        }
+        return normalFilePath;
+    }
+
+    public App run(){
+
+        commandToExecute = getiCommand(command, filename);
+
+        this.dbConnection  = getDBConnection();
+
+        if(commandToExecute != null) {
+
+            commandToExecute.setConnection(this.dbConnection);
+
+            resultOfCommand = commandToExecute.execute();
+
+        }
+        return this;
+    }
+
+    public App showResult(){
+        if(resultOfCommand != null){
+            resultOfCommand.display();
+        }
+        return this;
+    }
+
+    public App persistResult(){
+        if(resultOfCommand != null)
+            resultOfCommand.persist();
+
+        return this;
+    }
 
     public static void main( String[] args ) {
 
@@ -30,31 +87,12 @@ public class App
             return;
         }
 
-        ICommand commandToExecute = getiCommand(command, filename);
-        IResult resultOfCommand = null;
+        App instance = new App(command,filename);
 
-        Connection dbConnection  = getDBConnection();
-
-        if(commandToExecute != null) {
-
-            commandToExecute.setConnection(dbConnection);
-
-            resultOfCommand = commandToExecute.execute();
-
-        }
-
-
-
-        if(resultOfCommand != null){
-
-            if(resultOfCommand.canPersist() && dbConnection!=null)
-                resultOfCommand.persist();
-
-            resultOfCommand.display();
-        }
+        instance.run().persistResult().showResult().closeConnection();
     }
 
-    private static Connection getDBConnection(){
+    private Connection getDBConnection(){
 
         if(dbConnection!=null){
             return dbConnection;
@@ -69,7 +107,17 @@ public class App
         return dbConnection;
     }
 
-    private static ICommand getiCommand(String command, String filename) {
+    private void closeConnection(){
+        if(this.dbConnection != null){
+            try {
+                this.dbConnection.close();
+            }catch(Exception ex){
+                System.err.println("Unable to close db connection : " + ex.getMessage());
+            }
+        }
+    }
+
+    private ICommand getiCommand(String command, String filename) {
 
         ICommand commandToExecute = null;
         try{
@@ -83,7 +131,8 @@ public class App
             }
 
         }catch(Exception ex){
-            ex.printStackTrace();
+            System.err.println("Unknown file extension : " + ex.getMessage());
+
         }
         return commandToExecute;
     }

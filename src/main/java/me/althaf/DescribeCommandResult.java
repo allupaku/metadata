@@ -14,14 +14,14 @@ public class DescribeCommandResult implements IResult {
     String identifier;
 
     @Getter @Setter
-    List<FieldDefinition> fieldList = new ArrayList<>();
+    List<FieldDefinition> listOfFields = new ArrayList<>();
 
     public DescribeCommandResult(String fileName){
         this.identifier = fileName;
     }
 
     public void addFieldToResult(FieldDefinition fd){
-        this.fieldList.add(fd);
+        this.listOfFields.add(fd);
     }
 
     @Override
@@ -31,8 +31,13 @@ public class DescribeCommandResult implements IResult {
 
     @Override
     public void display() {
-
-        this.fieldList.forEach((fd) -> { System.out.println(fd.toString() );});
+        if(listOfFields.size() > 0) {
+            this.listOfFields.forEach((fd) -> {
+                System.out.println(fd.toString());
+            });
+        }else{
+            System.out.println("There are not fields discovered yet for this file! Please run crawl command.");
+        }
     }
 
     @Override
@@ -42,8 +47,11 @@ public class DescribeCommandResult implements IResult {
 
     @Override
     public void setConnection(Connection connection) {
-
+        // Do nothing as this implementation doensnt need a database
     }
 
-
+    @Override
+    public int getNumberOfFields() {
+        return this.listOfFields.size();
+    }
 }
