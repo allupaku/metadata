@@ -1,6 +1,6 @@
 # Metadata Parser
 
-#Checkout
+# Checkout
 
 ``` git clone https://github.com/allupaku/metadata.git ```
 
