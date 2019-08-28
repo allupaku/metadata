@@ -38,7 +38,7 @@ public abstract class AbstractFileParser<T> implements IFileParser, IRecordParse
 
         this.fileReader = new FileReader(filename);
 
-        this.observers.add(new ResultCounter());
+        this.observers.add(resultCounter);
     }
 
 

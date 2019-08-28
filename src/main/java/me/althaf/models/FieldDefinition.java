@@ -82,6 +82,8 @@ public class FieldDefinition {
     }
 
     public String toString(){
-        return "FIELD NAME : \t\t" + this.fieldName + " \r\nTYPE : \t\t" + dataType + " \r\nNULL VALUES: \t\t" + getCountNullValues() + "\r\nNON NULL VALUES: \t\t" + getCountNonNullValues()+ "\r\n ============ \r\n";
+
+        return String.format("%-40s  %-20s %-20s  %-20s%n",this.fieldName,dataType,getCountNullValues(),getCountNonNullValues() );
+
     }
 }

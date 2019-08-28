@@ -16,6 +16,9 @@ public class DescribeCommandResult implements IResult {
     @Getter @Setter
     List<FieldDefinition> listOfFields = new ArrayList<>();
 
+    @Getter @Setter
+    protected int totalNumberOfRecords = 0;
+
     public DescribeCommandResult(String fileName){
         this.identifier = fileName;
     }
@@ -31,6 +34,12 @@ public class DescribeCommandResult implements IResult {
 
     @Override
     public void display() {
+
+        System.out.println("Total number of records : " + this.getTotalNumberOfRecords()+ "\r\n");
+
+        System.out.println("Total Number of fields : " + this.listOfFields.size());
+
+        System.out.printf("%-40s  %-20s %-20s  %-20s%n","Field Name", "Data  Type","Null values", "Non Null Values");
         if(listOfFields.size() > 0) {
             this.listOfFields.forEach((fd) -> {
                 System.out.println(fd.toString());

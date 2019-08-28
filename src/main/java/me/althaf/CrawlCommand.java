@@ -16,7 +16,7 @@ import java.util.Objects;
 
 public class CrawlCommand implements ICommand{
 
-    public final static String FIELD_DEF_TABLE_NAME = "field_definitions";
+
 
     @Getter @Setter
     AbstractFileParser fileParser;
@@ -58,9 +58,11 @@ public class CrawlCommand implements ICommand{
 
         List<FieldDefinition> resultList = this.observer.getResult();
 
-        result = new CrawlCommandResult(this.getFileName(),resultList);
+        result = new CrawlCommandResult(this.getFileName(),resultList,this.fileParser.getCountOfRecords());
 
-        result.setTableName(FIELD_DEF_TABLE_NAME);
+        result.setFieldsTableName(FIELD_DEF_TABLE_NAME);
+
+        result.setTotalsTableName(TOTALS_TABLE_NAME);
 
         result.setConnection(this.connection);
 

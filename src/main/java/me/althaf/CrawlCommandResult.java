@@ -16,7 +16,10 @@ public class CrawlCommandResult implements IResult {
     List<FieldDefinition> listOfFields;
 
     @Getter @Setter
-    String tableName;
+    String fieldsTableName;
+
+    @Getter @Setter
+    String totalsTableName;
 
     @Getter @Setter
     Connection connection;
@@ -24,10 +27,15 @@ public class CrawlCommandResult implements IResult {
     @Getter @Setter
     private String identifier;
 
-    public CrawlCommandResult(String fileName, List<FieldDefinition> listOfFields){
+    @Getter @Setter
+    private int totalNumberOfRecords = 0;
+
+    public CrawlCommandResult(String fileName, List<FieldDefinition> listOfFields, int numRecords){
 
         this.identifier = fileName;
         this.listOfFields = listOfFields;
+
+        this.totalNumberOfRecords = numRecords;
     }
 
 
@@ -39,6 +47,8 @@ public class CrawlCommandResult implements IResult {
 
                 this.writeFieldDefinitionsToTable();
 
+                this.writeTotalsForFile();
+
             }catch(Exception ex){
                 ex.printStackTrace();
             }
@@ -47,8 +57,26 @@ public class CrawlCommandResult implements IResult {
 
     protected void deleteExistingRecords() throws SQLException {
 
+        this.deleteExistingFieldDefinitions();
+
+        this.deleteTotalsForFile();
+    }
+
+    private void deleteTotalsForFile() throws SQLException{
         PreparedStatement prepStatement =
-                connection.prepareStatement("delete from "+ tableName + " where filename=?");
+                connection.prepareStatement("delete from "+ totalsTableName + " where filename=?");
+
+        prepStatement.setString(1,this.identifier);
+
+        prepStatement.execute();
+
+        prepStatement.close();
+    }
+
+    private void deleteExistingFieldDefinitions() throws SQLException{
+
+        PreparedStatement prepStatement =
+                connection.prepareStatement("delete from "+ fieldsTableName + " where filename=?");
 
         prepStatement.setString(1,this.identifier);
 
@@ -60,6 +88,28 @@ public class CrawlCommandResult implements IResult {
     protected void writeFieldDefinitionsToTable()  {
 
         this.listOfFields.forEach(this::insertFieldDefinition);
+
+    }
+
+    protected void writeTotalsForFile() {
+        try {
+            PreparedStatement prepInsertStatement =
+                    connection.prepareStatement(
+                            "INSERT INTO " +
+                                    totalsTableName +
+                                    " VALUES( ? , ? ) ");
+
+            prepInsertStatement.setString(1, this.identifier);
+
+            prepInsertStatement.setInt(2, this.totalNumberOfRecords);
+
+            prepInsertStatement.execute();
+
+            prepInsertStatement.close();
+
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
 
     }
 
@@ -87,7 +137,7 @@ public class CrawlCommandResult implements IResult {
             PreparedStatement prepInsertStatement =
                     connection.prepareStatement(
                             "INSERT INTO " +
-                                    tableName +
+                                    fieldsTableName +
                                     " VALUES( ? , ?, ?, ?, ? ) ");
 
             prepInsertStatement.setString(1,this.identifier);
@@ -96,9 +146,9 @@ public class CrawlCommandResult implements IResult {
 
             prepInsertStatement.setString(3,fd.getDataType());
 
-            prepInsertStatement.setInt(4,fd.getCountNullValues());
+            prepInsertStatement.setInt(4,fd.getCountNonNullValues());
 
-            prepInsertStatement.setInt(5,fd.getCountNonNullValues());
+            prepInsertStatement.setInt(5,fd.getCountNullValues());
 
             return prepInsertStatement;
 
@@ -114,6 +164,10 @@ public class CrawlCommandResult implements IResult {
     @Override
     public void display() {
 
+        System.out.println("Total number of records : " + this.getTotalNumberOfRecords()+ "\r\n");
+
+        System.out.println("Total Number of fields : " + this.listOfFields.size());
+        System.out.printf("%-40s  %-20s %-20s  %-20s%n","Field Name", "Data  Type","Null values", "Non Null Values");
         this.listOfFields.forEach((fd) -> {
             System.out.println(fd.toString());
         });

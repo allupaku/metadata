@@ -14,10 +14,11 @@ import java.util.List;
 
 public class DescribeCommand implements ICommand {
 
-    public final static String FIELD_DEF_TABLE_NAME = "field_definitions";
 
     @Getter @Setter
     protected String fileName;
+
+
 
     @Getter @Setter
     Connection connection;
@@ -31,13 +32,35 @@ public class DescribeCommand implements ICommand {
 
         DescribeCommandResult res = new DescribeCommandResult(this.fileName);
 
-        this.populateResult(res);
+        this.populateFieldsResult(res);
+
+        this.populateTotalsResult(res);
 
         return res;
     }
 
+    protected void populateTotalsResult(DescribeCommandResult res) {
 
-    protected void populateResult(DescribeCommandResult res) {
+        try{
+            PreparedStatement prepStatement =
+                    connection.prepareStatement("select * from "+ TOTALS_TABLE_NAME+ " where filename=?");
+
+            prepStatement.setString(1,this.fileName);
+
+            ResultSet rs = prepStatement.executeQuery();
+
+            rs.first();
+
+            res.setTotalNumberOfRecords(rs.getInt("total"));
+
+            rs.close();
+
+        }catch(Exception e){
+            System.out.println("Invalid sql : " + e.getMessage());
+        }
+    }
+
+    protected void populateFieldsResult(DescribeCommandResult res) {
 
         try{
             PreparedStatement prepStatement =
@@ -61,6 +84,9 @@ public class DescribeCommand implements ICommand {
 
                 res.addFieldToResult(fd);
             }
+
+            rs.close();
+
         }catch(Exception e){
             System.out.println("Invalid sql : " + e.getMessage());
         }
