@@ -19,4 +19,5 @@ public interface IResult {
 
     public int getNumberOfFields();
 
+    public int getTotalNumberOfRecords();
 }

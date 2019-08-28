@@ -35,7 +35,6 @@ public class CrawlCommand implements ICommand{
     public CrawlCommand(String fileName) throws Exception{
 
         String mimetype = getFileMimeType(fileName);
-
         observer = new FieldSummaryObserver(fileName);
 
         if(mimetype.equals("csv")){
@@ -49,7 +48,9 @@ public class CrawlCommand implements ICommand{
         this.fileName = fileName;
     }
 
-
+    // Execute the crawl command in the given file.
+    // first this will parse the file, then get the result and create a Result object
+    // the result object is returned back, so that the caller can do what to do with the result.
     public IResult execute(){
 
         if(Objects.isNull(fileParser)) return null;
