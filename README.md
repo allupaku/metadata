@@ -1,10 +1,16 @@
 # Metadata Parser
 
+#Checkout
+
+``` git clone https://github.com/allupaku/metadata.git ```
+
+``` cd metadata ```
+
 # Compiling
 
 this project is built using maven, hence 
 
-mvn clean install - will create a jar file in target folder.
+```mvn clean install ``` - will create a jar file in target folder.
 
 Also provided two test files test.csv and test.json
 
