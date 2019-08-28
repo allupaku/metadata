@@ -29,3 +29,7 @@ crawl:
 describe:
 
 ``` java -jar target/simple-metadata-1.0-SNAPSHOT.jar describe test.csv ```
+
+Output looks like the below screenshot
+
+![](https://github.com/allupaku/metadata/raw/master/screen-output.png)
